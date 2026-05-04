@@ -1,0 +1,36 @@
+# Dépendances
+node_modules/
+
+# Base de données (contient des données sensibles)
+data/*.json
+data/*.db
+
+# Variables d'environnement (NE JAMAIS COMMITTER)
+.env
+.env.local
+.env.production
+
+# Uploads utilisateurs
+uploads/docs/*
+uploads/avatars/*
+!uploads/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Build
+dist/
+.cache/
+
+# Tests
+coverage/
