@@ -107,7 +107,7 @@ async function doLogin() {
 
   try {
     const res = await API.login(email, pw);
-    API.accessToken = res.accessToken;
+    API.accessToken = res.accessToken || res.access_token;
     currentUser = res.user;
     await showApp();
     showToast('success', 'Connexion réussie', `Bonjour ${currentUser.first_name} ! 👋`);

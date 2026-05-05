@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "seed": "node seed.js"
+    "seed": "node seed.js",
+    "test:smoke": "node scripts/smoke-test.js"
   },
   "engines": { "node": ">=18.0.0" },
   "dependencies": {

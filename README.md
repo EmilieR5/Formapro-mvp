@@ -77,6 +77,28 @@ npm start
 - Email : `sophie.martin@formapro-beta.fr`
 - Mot de passe : `FormaPro2026!`
 
+### Test rapide MVP (smoke test)
+
+1. Démarrer l'application :
+```bash
+npm start
+```
+
+2. Dans un second terminal, lancer :
+```bash
+npm run test:smoke
+```
+
+Sortie attendue :
+- `GET /health` en `200`
+- `POST /api/auth/login` en `200`
+- `GET /api/dashboard` en `200`
+- `GET /api/invoices` en `200`
+
+Variables optionnelles :
+- `BASE_URL` (défaut : `http://localhost:3000`)
+- `DEMO_EMAIL` et `DEMO_PASSWORD` (si vous changez le compte de test)
+
 ---
 
 ## 🔐 Sécurité implémentée
