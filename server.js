@@ -1,4 +1,4 @@
-require('dotenv').config();
+try { require('dotenv').config(); } catch (_) { /* dotenv not installed — env vars injected by platform */ }
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
