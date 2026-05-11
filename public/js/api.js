@@ -34,8 +34,11 @@ const API = {
             this.refreshQueue = [];
             return this.request(method, path, data, { _retry: true });
           }
-        } catch(e) {}
-        this.refreshing = false;
+        } catch(e) {
+          console.error('Token refresh failed:', e);
+        } finally {
+          this.refreshing = false;
+        }
         this.logout();
         return;
       }
