@@ -30,6 +30,7 @@ const API = {
           if (refreshRes.ok) {
             const refreshJson = await refreshRes.json();
             this.accessToken = refreshJson.accessToken || refreshJson.access_token;
+            if (!this.accessToken) throw new Error('No token in refresh response');
             this.refreshQueue.forEach(q => q.resolve(this.request(q.method, q.path, q.data, { _retry: true })));
             this.refreshQueue = [];
             return this.request(method, path, data, { _retry: true });

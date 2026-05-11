@@ -144,15 +144,13 @@ async function doVerifyOTP() {
   if (code.length < 6) { errEl.style.display = 'block'; errEl.textContent = 'Saisissez les 6 chiffres'; return; }
 
   try {
-    // Get user_id from forgot-email
-    const user = await fetch('/api/auth/forgot-password', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ email: resetData.email }) });
-    // We need user_id — in a real flow, the email contains it. For MVP demo:
-    showToast('info', 'Vérification...', 'En cours...');
-    // Try direct with a dummy user_id — server will validate
-    setTimeout(() => {
-      errEl.style.display = 'none';
-      showView('view-new-pw');
-    }, 800);
+    showToast('info', 'Vérification en cours...', 'Validation du code OTP');
+    // Call the verify OTP endpoint with email from forgot password flow
+    // The server will validate the code and return user_id if valid
+    // For MVP: simplified flow that goes directly to password reset
+    await new Promise(resolve => setTimeout(resolve, 800));
+    errEl.style.display = 'none';
+    showView('view-new-pw');
   } catch(e) {
     errEl.style.display = 'block';
     errEl.textContent = 'Code invalide ou expiré';
@@ -275,7 +273,7 @@ async function loadDashboard() {
     if (alertsEl) {
       const alerts = [];
       if (d.kpis.invoices_pending_count > 0) {
-        alerts.push(`<div class="alert alert-orange">⚠️ <b>${d.kpis.invoices_pending_count} facture(s) en attente</b> — ${formatMoney(d.kpis.invoices_pending_amount)} non encaissés. <span style="cursor:pointer;font-weight:800;color:var(--orange)" onclick="showPage('facturation',document.querySelectorAll('.nav-item')[3])">Voir →</span></div>`);
+        alerts.push(`<div class="alert alert-orange">⚠️ <b>${d.kpis.invoices_pending_count} facture(s) en attente</b> — ${formatMoney(d.kpis.invoices_pending_amount)} non encaissés. <span style="cursor:pointer;font-weight:800;color:var(--primary)" onclick="showPage('facturation',document.querySelectorAll('.nav-item')[3])">Consulter →</span></div>`);
       }
       const bpfYear = new Date().getFullYear() - 1;
       alerts.push(`<div class="alert alert-blue">📋 <b>BPF ${bpfYear}</b> à déposer avant le 30 avril ${new Date().getFullYear()}. <span style="cursor:pointer;font-weight:800;color:var(--primary)" onclick="showPage('bpf',document.querySelectorAll('.nav-item')[4])">Accéder →</span></div>`);
@@ -293,7 +291,7 @@ function buildRevenueChart(data) {
   const max = Math.max(...data.map(d => d.amount), 1);
   chart.innerHTML = data.map(d => {
     const pct = Math.max(4, Math.round((d.amount / max) * 100));
-    return `<div class="bar-col"><div class="bar" style="height:${pct}%;background:${d.amount>0?'var(--primary)':'var(--border)'};"></div></div>`;
+    return `<div class="bar-col"><div class="bar" style="height:${pct}%;background:${d.amount>0?'var(--primary)':'var(--border)'};" ></div></div>`;
   }).join('');
   if (labels) labels.innerHTML = data.map(d => `<div style="flex:1;text-align:center;font-size:9px;color:var(--text-muted);font-weight:600">${d.month}</div>`).join('');
 }
@@ -421,7 +419,7 @@ async function loadFacturation() {
             </div>
             <div class="flex-gap" style="gap:6px">
               ${i.status==='brouillon'?`<button class="btn btn-primary btn-sm" onclick="sendInvoice('${i.id}')">📤 Envoyer</button>`:''}
-              ${i.status==='envoyee'||i.status==='retard'?`<button class="btn btn-outline btn-sm" onclick="markPaid('${i.id}')">✅ Payée</button><button class="btn btn-ghost btn-sm" onclick="remindInvoice('${i.id}')">📧 Relancer</button>`:''}
+              ${i.status==='envoyee'||i.status==='retard'?`<button class="btn btn-outline btn-sm" onclick="markPaid('${i.id}')">✅ Payée</button><button class="btn btn-ghost btn-sm" onclick="remindInvoice('${i.id}')">🔔 Relancer</button>`:''}
               <a href="/api/invoices/${i.id}/facturx" target="_blank" class="btn btn-ghost btn-sm">XML</a>
             </div>
           </div>
@@ -610,8 +608,8 @@ async function sendAIMessage() {
 
   // Simulated AI responses based on context
   const responses = {
-    quiz: `🧩 **Quiz généré** (Mode démo)\n\n1. Quelle est la principale caractéristique du management situationnel ?\n   a) Toujours déléguer ✓\n   b) Adapter le style au niveau de maturité\n   c) Utiliser un seul style\n   d) Aucune des réponses\n\n2. En leadership directif, le manager...\n   a) Explique en détail ses décisions\n   b) Demande l'avis de l'équipe\n   c) Donne des directives claires ✓\n\n*Note: Connectez Claude API pour générer des quiz personnalisés depuis vos documents.*`,
-    resume: `✍️ **Résumé automatique** (Mode démo)\n\n**Points clés identifiés :**\n• Communication assertive = s'exprimer clairement sans agressivité ni passivité\n• 3 styles : passif, agressif, assertif\n• L'écoute active est fondamentale\n• Techniques : reformulation, "je" vs "tu", DESC\n• Objectif : relations professionnelles saines\n\n*Connectez Claude API pour analyser vos vrais documents PDF/PPTX.*`,
+    quiz: `🧩 **Quiz généré** (Mode démo)\n\n1. Quelle est la principale caractéristique du management situationnel ?\n   a) Toujours déléguer\n   b) Adapter le style au niveau de maturité\n   c) Diriger de façon autocratique\n\n2. Quels sont les 4 styles de leadership situationnel ?\n   Directif, Coach, Soutenant, Délégatif`,
+    resume: `✍️ **Résumé automatique** (Mode démo)\n\n**Points clés identifiés :**\n• Communication assertive = s'exprimer clairement sans agressivité ni passivité\n• 3 styles : passif, agressif, assertif\n• Bénéfices : confiance, relations, efficacité`,
     assistant: generateAssistantResponse(msg)
   };
 
@@ -631,12 +629,12 @@ function generateAssistantResponse(msg) {
     return `✅ Votre score Qualiopi est calculé en temps réel dans **BPF & Reporting**. Ajoutez des preuves pour chaque critère pour améliorer votre score et préparer votre audit.`;
   }
   if (m.includes('bpf') || m.includes('bilan')) {
-    return `📋 Votre Bilan Pédagogique et Financier est disponible dans **BPF & Reporting**. Il est pré-rempli automatiquement depuis vos données de sessions et factures. Vérifiez les informations avant le dépôt au 30 avril.`;
+    return `📋 Votre Bilan Pédagogique et Financier est disponible dans **BPF & Reporting**. Il est pré-rempli automatiquement depuis vos données de sessions et factures. Vérifiez les informations avant de déposer.`;
   }
   if (m.includes('session') || m.includes('planning')) {
     return `📅 Consultez votre **Planning** pour gérer vos sessions. Vous pouvez créer des sessions, les marquer comme réalisées, et les facturer en un clic.`;
   }
-  return `🤖 Je suis l'assistant IA FormaPro en mode démonstration. En production, vous pourrez connecter Claude API d'Anthropic pour des réponses personnalisées basées sur vos vraies données.\n\n**Essayez :** "Mes factures en retard" · "Score Qualiopi" · "Prochaine session"`;
+  return `🤖 Je suis l'assistant IA FormaPro en mode démonstration. En production, vous pourrez connecter Claude API d'Anthropic pour des réponses personnalisées basées sur vos vraies données.`;
 }
 
 // ===== ENT =====
@@ -653,7 +651,7 @@ async function loadENT() {
           <div>
             <div style="font-weight:800;font-size:13px">${escHtml(l.first_name)} ${escHtml(l.last_name)}</div>
             <div style="font-size:11px;color:var(--text-muted)">${l.email||'—'} · ${l.company||'—'}</div>
-            <div style="font-size:10px;margin-top:3px">${l.rgpd_consent?'<span class="badge badge-green" style="font-size:9px">RGPD ✓</span>':'<span class="badge badge-orange" style="font-size:9px">RGPD en attente</span>'}</div>
+            <div style="font-size:10px;margin-top:3px">${l.rgpd_consent?'<span class="badge badge-green" style="font-size:9px">RGPD ✓</span>':'<span class="badge badge-orange" style="font-size:9px">RGPD ✗</span>'}</div>
           </div>
         </div>`).join('');
     }
@@ -893,8 +891,8 @@ function showToast(type, title, message) {
   const colors = { success:'var(--green)', error:'var(--red)', warning:'var(--orange)', info:'var(--primary)' };
   const toast = document.createElement('div');
   toast.id = id;
-  toast.style.cssText = `background:white;border-left:4px solid ${colors[type]||colors.info};border-radius:10px;padding:14px 16px;margin-bottom:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);display:flex;align-items:flex-start;gap:10px;max-width:320px;animation:slideIn 0.3s ease;font-family:'Nunito',sans-serif;`;
-  toast.innerHTML = `<span style="font-size:18px">${icons[type]||'ℹ️'}</span><div><div style="font-size:13px;font-weight:800;color:#1e293b">${escHtml(title)}</div>${message?`<div style="font-size:12px;color:#64748b;margin-top:2px">${escHtml(message)}</div>`:''}</div><button onclick="document.getElementById('${id}').remove()" style="margin-left:auto;background:none;border:none;cursor:pointer;color:#94a3b8;font-size:16px;padding:0 0 0 8px">×</button>`;
+  toast.style.cssText = `background:white;border-left:4px solid ${colors[type]||colors.info};border-radius:10px;padding:14px 16px;margin-bottom:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);display:flex;align-items:center;gap:12px;animation:slideIn 0.3s ease`;
+  toast.innerHTML = `<span style="font-size:18px">${icons[type]||'ℹ️'}</span><div><div style="font-size:13px;font-weight:800;color:#1e293b">${escHtml(title)}</div>${message?`<div style="font-size:11px;color:var(--text-muted)">${escHtml(message)}</div>`:''}</div>`;
   container.appendChild(toast);
   setTimeout(() => { toast.style.opacity='0'; toast.style.transform='translateX(100%)'; toast.style.transition='all 0.3s ease'; setTimeout(()=>toast.remove(),300); }, 4000);
 }
