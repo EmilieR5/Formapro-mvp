@@ -243,13 +243,13 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
         <div class="divider-or">ou avec votre email</div>
         <div class="lf-grp">
           <div class="lf-lbl"><span>Adresse e-mail</span></div>
-          <div class="lf-wrap"><input type="email" class="lf-inp" id="l-email" value="sophie.martin@formapro-beta.fr" placeholder="prenom.nom@exemple.fr" autocomplete="email"></div>
+          <div class="lf-wrap"><input type="email" class="lf-inp" id="l-email" value="" placeholder="prenom.nom@exemple.fr" autocomplete="email"></div>
           <div class="err-msg" id="e-email">Adresse e-mail invalide</div>
         </div>
         <div class="lf-grp">
           <div class="lf-lbl"><span>Mot de passe</span><span class="lf-forgot" onclick="showLV('lv-forgot')">Mot de passe oublié ?</span></div>
           <div class="lf-wrap">
-            <input type="password" class="lf-inp" id="l-pw" value="FormaPro2026!" placeholder="Votre mot de passe" autocomplete="current-password">
+            <input type="password" class="lf-inp" id="l-pw" value="" placeholder="Votre mot de passe" autocomplete="current-password">
             <button class="lf-toggle" type="button" onclick="togglePw('l-pw',this)">👁</button>
           </div>
           <div class="err-msg" id="e-pw">Identifiants incorrects</div>
@@ -262,6 +262,9 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
           <div class="rgpd-note">🛡️ <span>Données hébergées en France, chiffrées AES-256, non revendues. Droits d'accès, rectification et suppression garantis.</span></div>
         </div>
         <button class="btn-login" id="btn-login" onclick="doLogin()"><span id="btn-login-lbl">Se connecter</span></button>
+        <div style="text-align:center;margin-top:13px;font-size:12.5px;color:var(--text-muted)">
+          Pas encore de compte ? <span style="color:var(--primary);font-weight:700;cursor:pointer" onclick="showLV('lv-register')">Créer un compte →</span>
+        </div>
         <div class="sec-footer">
           <div class="sec-item"><div class="sec-dot"></div>TLS 1.3</div>
           <div class="sec-item"><div class="sec-dot"></div>Bcrypt 12</div>
@@ -346,6 +349,51 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
         <h1 style="text-align:center;margin-bottom:7px">Mot de passe mis à jour !</h1>
         <p class="lvsub" style="text-align:center">Réinitialisé avec succès. Vous pouvez maintenant vous connecter.</p>
         <button class="btn-login" onclick="showLV('lv-login')">Se connecter →</button>
+      </div>
+
+      <!-- Vue 7: Créer un compte -->
+      <div class="lv" id="lv-register">
+        <button class="back-link" onclick="showLV('lv-login')">← Retour</button>
+        <h1>Créer un compte 🚀</h1>
+        <p class="lvsub">Rejoignez FormaPro et gérez votre activité de formateur.</p>
+        <div class="lf-grp">
+          <div class="lf-lbl"><span>Prénom</span></div>
+          <div class="lf-wrap"><input type="text" class="lf-inp" id="r-firstname" placeholder="Votre prénom" autocomplete="given-name"></div>
+          <div class="err-msg" id="e-r-firstname">Prénom requis</div>
+        </div>
+        <div class="lf-grp">
+          <div class="lf-lbl"><span>Nom</span></div>
+          <div class="lf-wrap"><input type="text" class="lf-inp" id="r-lastname" placeholder="Votre nom" autocomplete="family-name"></div>
+          <div class="err-msg" id="e-r-lastname">Nom requis</div>
+        </div>
+        <div class="lf-grp">
+          <div class="lf-lbl"><span>Adresse e-mail</span></div>
+          <div class="lf-wrap"><input type="email" class="lf-inp" id="r-email" placeholder="prenom.nom@exemple.fr" autocomplete="email"></div>
+          <div class="err-msg" id="e-r-email">Adresse e-mail invalide</div>
+        </div>
+        <div class="lf-grp">
+          <div class="lf-lbl"><span>Mot de passe</span></div>
+          <div class="lf-wrap">
+            <input type="password" class="lf-inp" id="r-pw" placeholder="Min. 8 caractères" oninput="checkStr(this.value)" autocomplete="new-password">
+            <button class="lf-toggle" type="button" onclick="togglePw('r-pw',this)">👁</button>
+          </div>
+          <div class="pw-str" id="pw-str" style="display:none">
+            <div class="pw-bars"><div class="pw-bar" id="b0"></div><div class="pw-bar" id="b1"></div><div class="pw-bar" id="b2"></div><div class="pw-bar" id="b3"></div></div>
+            <div class="pw-lbl" id="pw-lbl"></div>
+          </div>
+          <div class="err-msg" id="e-r-pw">Mot de passe trop court (min. 8 caractères)</div>
+        </div>
+        <div class="rgpd-box">
+          <div class="rgpd-row">
+            <input type="checkbox" id="r-rgpd">
+            <label for="r-rgpd">J'accepte les <a href="#" onclick="return false">CGU</a> et la <a href="#" onclick="return false">Politique de confidentialité</a>, conformément au RGPD (UE) 2016/679.</label>
+          </div>
+          <div class="rgpd-note">🛡️ <span>Données hébergées en France, chiffrées AES-256, non revendues. Droits d'accès, rectification et suppression garantis.</span></div>
+        </div>
+        <button class="btn-login" id="btn-register" onclick="doRegister()"><span>Créer mon compte</span></button>
+        <div style="text-align:center;margin-top:13px;font-size:12.5px;color:var(--text-muted)">
+          Déjà un compte ? <span style="color:var(--primary);font-weight:700;cursor:pointer" onclick="showLV('lv-login')">Se connecter →</span>
+        </div>
       </div>
     </div>
   </div>
@@ -706,6 +754,35 @@ async function doLogin() {
     ePW.textContent=e.message;ePW.classList.add('show');document.getElementById('l-pw').classList.add('err');
     btn.disabled=false;btn.innerHTML='<span>Se connecter</span>';
     document.getElementById('loading-fill').style.width='0';
+  }
+}
+
+async function doRegister() {
+  const fn=document.getElementById('r-firstname').value.trim();
+  const ln=document.getElementById('r-lastname').value.trim();
+  const email=document.getElementById('r-email').value.trim();
+  const pw=document.getElementById('r-pw').value;
+  const rgpd=document.getElementById('r-rgpd').checked;
+  ['e-r-firstname','e-r-lastname','e-r-email','e-r-pw'].forEach(id=>document.getElementById(id).classList.remove('show'));
+  ['r-firstname','r-lastname','r-email','r-pw'].forEach(id=>document.getElementById(id).classList.remove('err'));
+  let valid=true;
+  if(!fn){document.getElementById('e-r-firstname').classList.add('show');document.getElementById('r-firstname').classList.add('err');valid=false;}
+  if(!ln){document.getElementById('e-r-lastname').classList.add('show');document.getElementById('r-lastname').classList.add('err');valid=false;}
+  if(!isEmail(email)){document.getElementById('e-r-email').classList.add('show');document.getElementById('r-email').classList.add('err');valid=false;}
+  if(pw.length<8){document.getElementById('e-r-pw').classList.add('show');document.getElementById('r-pw').classList.add('err');valid=false;}
+  if(!rgpd){toast('Veuillez accepter les CGU et la politique de confidentialité.','error');return;}
+  if(!valid)return;
+  const btn=document.getElementById('btn-register');
+  btn.disabled=true;btn.innerHTML='<span class="loading-spinner"></span>';
+  try {
+    const d=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({first_name:fn,last_name:ln,email,password:pw,rgpd_consent:true})}).then(async r=>{const j=await r.json();if(!r.ok)throw new Error(j.error||'Erreur');return j;});
+    token=d.access_token;currentUser=d.user;
+    localStorage.setItem('fp_token',token);localStorage.setItem('fp_user',JSON.stringify(currentUser));
+    toast('Compte créé avec succès ! Bienvenue 🎉','success');
+    setTimeout(()=>{enterApp();},600);
+  } catch(e) {
+    toast(e.message,'error');
+    btn.disabled=false;btn.innerHTML='<span>Créer mon compte</span>';
   }
 }
 
