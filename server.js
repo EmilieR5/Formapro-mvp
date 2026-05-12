@@ -132,9 +132,6 @@ app.listen(PORT, () => {
   console.log(`║  🚀  http://localhost:${PORT}${' '.repeat(19 - String(PORT).length)}║`);
   console.log(`║  🌍  Env    : ${(process.env.NODE_ENV||'development').padEnd(28)}║`);
   console.log(`╠${line}╣`);
-  console.log(`║  📧  sophie.martin@formapro-beta.fr         ║`);
-  console.log(`║  🔑  FormaPro2026!                          ║`);
-  console.log(`╠${line}╣`);
   console.log(`║  Routes disponibles :                       ║`);
   console.log(`║  POST /api/auth/login                       ║`);
   console.log(`║  POST /api/auth/register                    ║`);
